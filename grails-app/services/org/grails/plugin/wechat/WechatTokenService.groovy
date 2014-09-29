@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by hhxiao on 2014/9/29.
  */
-class WechatConfigService implements InitializingBean {
+class WechatTokenService implements InitializingBean {
     private static final String ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APP_ID&secret=APP_SECRET"
 
     def grailsApplication
