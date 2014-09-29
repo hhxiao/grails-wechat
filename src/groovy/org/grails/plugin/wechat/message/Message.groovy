@@ -1,11 +1,20 @@
 package org.grails.plugin.wechat.message
 
+import org.grails.plugin.wechat.util.JsonHelper
+
 import java.lang.reflect.Method
 
 /**
  * Created by hhxiao on 9/29/14.
  */
 abstract class Message {
+    Message() {
+        String simpleName = getClass().simpleName
+        msgType = MsgType.valueOf(simpleName.substring(0, simpleName.length() - 'message'.length()).toLowerCase())
+        createTime = System.currentTimeMillis() / 1000
+        msgId = System.nanoTime()
+    }
+
     /**
      * 消息id，64位整型
      */
@@ -28,24 +37,6 @@ abstract class Message {
      * 消息创建时间 （整型）
      */
     long createTime
-
-    /**
-     * To response xml
-     * @return
-     */
-    final String toResponseXml() {
-        """<xml>
- <ToUserName><![CDATA[${toUserName}]]></ToUserName>
- <FromUserName><![CDATA[${fromUserName}]]></FromUserName>
- <CreateTime>${createTime}</CreateTime>
- <MsgType><![CDATA[${msgType.name()}]]></MsgType>
- ${getAdditionalResponseXml()}
- <MsgId>${msgId}</MsgId>
- </xml>
-"""
-    }
-
-    abstract String getAdditionalResponseXml()
 
     static Message fromXml(String text) {
         XmlSlurper slurper = new XmlSlurper()
