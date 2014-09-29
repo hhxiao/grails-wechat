@@ -1,24 +1,17 @@
 package org.grails.plugin.wechat
 
+import org.grails.plugin.wechat.message.Message
 import org.springframework.beans.factory.InitializingBean
 
 /**
  * Created by haihxiao on 17/9/14.
  */
-class WechatService implements InitializingBean {
-    def grailsApplication
+class WechatService {
+    private static final String CUSTOM_SERVICE_URL = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=ACCESS_TOKEN"
 
-    String apiServer
-    String appId
-    String appSecret
+    def wechatConfigService
 
-    @Override
-    void afterPropertiesSet() throws Exception {
-        apiServer = grailsApplication.config.wechat?.api?.url?.toString()
-        appId = grailsApplication.config.wechat.api?.app?.id?.toString()
-        appSecret = grailsApplication.config.wechat.api?.app?.secret?.toString()
-        if(!appId || !appSecret) {
-            throw new IllegalStateException("Weixin AppId or AppSecret is not configured")
-        }
+    void sendCustomMessage(Message message) {
+
     }
 }
