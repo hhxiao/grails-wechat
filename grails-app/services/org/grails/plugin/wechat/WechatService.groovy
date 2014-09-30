@@ -2,13 +2,8 @@ package org.grails.plugin.wechat
 
 import org.grails.plugin.wechat.message.Message
 import org.grails.plugin.wechat.message.ResponseMessage
-import org.grails.plugin.wechat.token.AccessToken
-import org.grails.plugin.wechat.util.HttpUtils
-import org.grails.plugin.wechat.util.JsonHelper
 import org.grails.plugin.wechat.util.MessageUtils
-import org.springframework.beans.factory.InitializingBean
 
-import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 /**
@@ -17,6 +12,10 @@ import javax.servlet.http.HttpServletResponse
  * Created by haihxiao on 17/9/14.
  */
 class WechatService {
+    String handleMessage(Message message) {
+        MessageUtils.toXml(message) + "" + MessageUtils.toJson(message)
+    }
+
     void sendReply(HttpServletResponse response, ResponseMessage reply) {
         response.setContentType('application/xml')
         response.sendError(HttpURLConnection.HTTP_OK, MessageUtils.toXml(reply))
