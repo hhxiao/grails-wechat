@@ -6,10 +6,6 @@ package org.grails.plugin.wechat.message
 class TextMessage extends Message implements ResponseMessage {
     String content // 文本消息内容
 
-    TextMessage() {
-        msgType = MsgType.text
-    }
-
     String getAdditionalResponseXml() {
         "<Content><![CDATA[${content}]]></Content>"
     }
