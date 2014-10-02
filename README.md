@@ -33,15 +33,12 @@ Annotation based or conventional callback declaration
 class SampleService {
     def wechatResponseService
 
-    @MessageHandler(value=MsgType.event, events=[EventType.subscribe, EventType.unsubscribe])
-    ResponseMessage onSubscriptionChanged(EventMessage message) {
-        wechatResponseService.responseText(message, (message.event == EventType.subscribe) ? '欢迎' : '再见')
-    }
-
+    // Text message only
     ResponseMessage onText(TextMessage message) {
         wechatResponseService.responseText(message, "收到：" + message.content)
     }
 
+    // Image message only
     ResponseMessage onImage(ImageMessage message) {
         wechatResponseService.responseNews(message, new Article([
             title: "标题一", description: '描述一', picUrl: message.picUrl
@@ -50,29 +47,40 @@ class SampleService {
         ))
     }
 
-    @MessageHandler(value=MsgType.location)
+    // subscribe and unsubscribe event only
+    @MessageHandler(value=MsgType.event, events=[EventType.subscribe, EventType.unsubscribe])
+    ResponseMessage onSubscriptionChanged(EventMessage message) {
+        wechatResponseService.responseText(message, (message.event == EventType.subscribe) ? '欢迎' : '再见')
+    }
+
+    // Location message only, annotation is not necessary
+    @MessageHandler(MsgType.location)
     ResponseMessage onLocationReceived(LocationMessage message) {
         wechatResponseService.responseText(message, "收到位置消息: ${message.label}")
     }
 
+    // SCAN event only
     @MessageHandler(value=MsgType.event, events=[EventType.SCAN])
     ResponseMessage onScanned(EventMessage message) {
         wechatResponseService.responseText(message, "扫描了: ${message.eventKey}")
     }
 
+    // CLICK event only
     @MessageHandler(value=MsgType.event, events=[EventType.CLICK])
     ResponseMessage onMenuClicked(EventMessage message) {
         wechatResponseService.responseText(message, "点击了：${message.eventKey}")
     }
 
+    // VIEW event only
     @MessageHandler(value=MsgType.event, events=[EventType.VIEW])
     ResponseMessage onItemViewed(EventMessage message) {
         wechatResponseService.responseText(message, "查看了：${message.eventKey}")
     }
 
+    // LOCATION event only
     @MessageHandler(value=MsgType.event, events=[EventType.LOCATION])
     ResponseMessage onLocationEvent(EventMessage message) {
-        wechatResponseService.responseText(message, "收到位置事件: ${message.latitude}:${message.longitude}:${message.precision}")
+        wechatResponseService.responseText(message, "收到位置事件: ${message.latitude}:${message.longitude}")
     }
 }
 
