@@ -5,11 +5,11 @@ Grails Wechat Integration Plugin, 微信公众平台 Grails 插件
 
 ## Introduction
 
-目前提供的接口:
+Services provided:
 
-1. WechatTokenService(Token服务，获取access_token)
-2. WechatResponseService(消息响应服务，发送响应消息给客户端)
-3. WechatCustomerService(客服接口，发送客服消息给客户端)
+1. WechatTokenService(Token interface，to retrieve access_token)
+2. WechatResponseService(Message response interface，to send response message to client)
+3. WechatCustomerService(Customer service interface，to send customer service message to client)
 
 ## Installation
 
