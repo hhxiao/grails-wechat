@@ -10,12 +10,16 @@ class Article {
     String url	// 点击图文消息跳转链接
 
     String toXml() {
-        """<item>
-<Title><![CDATA[${title}]]></Title>
-<Description><![CDATA[${description}]]></Description>
-<PicUrl><![CDATA[${picUrl}]]></PicUrl>
-<Url><![CDATA[${url}]]></Url>
-</item>
+        """  <item>
+   <Title><![CDATA[${title?:''}]]></Title>
+   <Description><![CDATA[${description?:''}]]></Description>
+   <PicUrl><![CDATA[${picUrl?:''}]]></PicUrl>
+   <Url><![CDATA[${url?:''}]]></Url>
+  </item>
 """
+    }
+
+    Map<String, Object> toJson() {
+        [title: title?:'', description: description?:'', url: url?:'', picurl: picurl?:'']
     }
 }

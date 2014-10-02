@@ -8,10 +8,10 @@ class ImageMessage extends Message implements ResponseMessage {
     String mediaId // 图片消息媒体id，可以调用多媒体文件下载接口拉取数据。
 
     String getAdditionalResponseXml() {
-        "<Image><MediaId><![CDATA[${mediaId}]]></MediaId></Image>"
+        "<Image><MediaId><![CDATA[${mediaId?:''}]]></MediaId></Image>"
     }
 
     Map<String, Object> getAdditionalResponseJson() {
-        ['media_id': mediaId]
+        ['media_id': mediaId?:'']
     }
 }

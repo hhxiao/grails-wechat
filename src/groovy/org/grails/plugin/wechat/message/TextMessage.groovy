@@ -7,10 +7,10 @@ class TextMessage extends Message implements ResponseMessage {
     String content // 文本消息内容
 
     String getAdditionalResponseXml() {
-        "<Content><![CDATA[${content}]]></Content>"
+        "<Content><![CDATA[${content?:''}]]></Content>"
     }
 
     Map<String, Object> getAdditionalResponseJson() {
-        ['content': content]
+        ['content': content?:'']
     }
 }

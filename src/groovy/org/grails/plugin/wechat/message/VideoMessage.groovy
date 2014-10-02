@@ -12,13 +12,13 @@ class VideoMessage extends Message implements ResponseMessage {
 
     String getAdditionalResponseXml() {
         """<Video>
-<MediaId><![CDATA[${mediaId}]]></MediaId>
-<Title><![CDATA[${title}]]></Title>
-<Description><![CDATA[${description}]]></Description>
+<MediaId><![CDATA[${mediaId?:''}]]></MediaId>
+<Title><![CDATA[${title?:''}]]></Title>
+<Description><![CDATA[${description?:''}]]></Description>
 </Video>"""
     }
 
     Map<String, Object> getAdditionalResponseJson() {
-        ['media_id': mediaId, 'thumb_media_id': thumbMediaId, 'title': title, 'description': description]
+        ['media_id': mediaId?:'', 'thumb_media_id': thumbMediaId?:'', 'title': title?:'', 'description': description?:'']
     }
 }

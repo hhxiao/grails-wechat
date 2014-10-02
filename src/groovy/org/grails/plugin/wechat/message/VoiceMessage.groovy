@@ -9,10 +9,10 @@ class VoiceMessage extends Message implements ResponseMessage {
     String recognition // 语音识别结果，UTF8编码
 
     String getAdditionalResponseXml() {
-        "<Voice><MediaId><![CDATA[${mediaId}]]></MediaId></Voice>"
+        "<Voice><MediaId><![CDATA[${mediaId?:''}]]></MediaId></Voice>"
     }
 
     Map<String, Object> getAdditionalResponseJson() {
-        ['media_id': mediaId]
+        ['media_id': mediaId?:'']
     }
 }

@@ -14,16 +14,16 @@ class MusicMessage extends Message implements ResponseMessage {
 
     String getAdditionalResponseXml() {
         """<Music>
-<Title><![CDATA[${title}]]></Title>
-<Description><![CDATA[${description}]]></Description>
-<MusicUrl><![CDATA[${musicUrl}]]></MusicUrl>
-<HQMusicUrl><![CDATA[${hqMusicUrl}]]></HQMusicUrl>
-<ThumbMediaId><![CDATA[${mediaId}]]></ThumbMediaId>
-</Music>"""
+  <Title><![CDATA[${title?:''}]]></Title>
+  <Description><![CDATA[${description?:''}]]></Description>
+  <MusicUrl><![CDATA[${musicUrl?:''}]]></MusicUrl>
+  <HQMusicUrl><![CDATA[${hqMusicUrl?:''}]]></HQMusicUrl>
+  <ThumbMediaId><![CDATA[${mediaId?:''}]]></ThumbMediaId>
+ </Music>"""
     }
 
     Map<String, Object> getAdditionalResponseJson() {
-        ['media_id': mediaId, 'thumb_media_id': thumbMediaId, 'title': title,
-         'description': description, 'musicurl': musicUrl, 'hqmusicurl': hqMusicUrl]
+        ['media_id': mediaId?:'', 'thumb_media_id': thumbMediaId?:'', 'title': title?:'',
+         'description': description?:'', 'musicurl': musicUrl?:'', 'hqmusicurl': hqMusicUrl?:'']
     }
 }

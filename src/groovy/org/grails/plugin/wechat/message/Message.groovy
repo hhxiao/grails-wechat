@@ -1,9 +1,6 @@
 package org.grails.plugin.wechat.message
 
-import org.grails.plugin.wechat.util.JsonHelper
-
 import java.lang.reflect.Method
-
 /**
  * Created by hhxiao on 9/29/14.
  */
@@ -12,7 +9,6 @@ abstract class Message {
         String simpleName = getClass().simpleName
         msgType = MsgType.valueOf(simpleName.substring(0, simpleName.length() - 'message'.length()).toLowerCase())
         createTime = System.currentTimeMillis() / 1000
-        msgId = System.nanoTime()
     }
 
     /**
