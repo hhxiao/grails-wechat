@@ -3,7 +3,6 @@ package org.grails.plugin.wechat
 import org.grails.plugin.wechat.message.ResponseMessage
 import org.grails.plugin.wechat.util.HttpUtils
 import org.grails.plugin.wechat.util.MessageUtils
-
 /**
  * 微信客服接口
  *

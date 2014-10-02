@@ -11,7 +11,7 @@ import org.grails.plugin.wechat.util.SignatureHelper
 class WechatController {
     static allowedMethods = [check: "GET", post: "POST"]
 
-    def wechatService
+    def wechatHandlerService
     def wechatTokenService
 
     static beforeInterceptor = {
@@ -37,6 +37,6 @@ class WechatController {
 
     def post() {
         Message message = MessageUtils.fromGPathResult(request.XML)
-        render wechatService.handleMessage(message)
+        render wechatHandlerService.handleMessage(message)
     }
 }
