@@ -1,0 +1,35 @@
+<plugin name='grails-wechat' version='0.1' grailsVersion='2.0.0 &gt; *'>
+  <author>Haihua Xiao</author>
+  <authorEmail>hhxiao@gmail.com</authorEmail>
+  <title>Grails Wechat Plugin</title>
+  <description>Grails plugin provides wechat integration features.
+</description>
+  <documentation>http://grails.org/plugin/grails-wechat</documentation>
+  <type>GrailsWechatGrailsPlugin</type>
+  <resources>
+    <resource>WechatUrlMappings</resource>
+    <resource>org.grails.plugin.wechat.WechatController</resource>
+    <resource>org.grails.plugin.wechat.WechatCustomerService</resource>
+    <resource>org.grails.plugin.wechat.WechatResponseService</resource>
+    <resource>org.grails.plugin.wechat.WechatTokenService</resource>
+    <resource>org.grails.plugin.wechat.internal.WechatHandlerService</resource>
+  </resources>
+  <repositories>
+    <repository name='grailsCentral' url='http://grails.org/plugins' />
+    <repository name='mavenCentral' url='http://repo1.maven.org/maven2/' />
+    <repository name='http://grails.org/plugins' url='http://grails.org/plugins' />
+  </repositories>
+  <dependencies />
+  <plugins>
+    <runtime>
+      <plugin group='org.grails.plugins' name='jquery' version='1.8.0' />
+      <plugin group='org.grails.plugins' name='hibernate' version='2.2.5' />
+      <plugin group='org.grails.plugins' name='resources' version='1.2' />
+    </runtime>
+    <build>
+      <plugin group='org.grails.plugins' name='tomcat' version='2.2.5' />
+    </build>
+  </plugins>
+  <runtimePluginRequirements />
+  <behavior />
+</plugin>

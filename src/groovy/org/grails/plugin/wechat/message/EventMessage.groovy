@@ -13,4 +13,9 @@ class EventMessage extends Message {
     String precision // 地理位置精度
 
     String status   // 事件状态
+
+    int totalCount
+    int filterCount
+    int sentCount
+    int errorCount
 }

@@ -13,5 +13,6 @@ public enum EventType {
     CLICK, // 自定义菜单点击事件
     VIEW, // 点击菜单跳转链接时的事件
 
-    TEMPLATESENDJOBFINISH // 模板消息发送结束
+    MASSSENDJOBFINISH,      // 消息群发结束
+    TEMPLATESENDJOBFINISH   // 模板消息发送结束
 }

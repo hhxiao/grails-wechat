@@ -37,14 +37,18 @@ class MessageUtils {
             String name = it.name()
             try {
                 Method getter = message.class.getMethod("get$name")
-                Method setter = message.class.getMethod("set$name", getter.getReturnType())
+                Class<?> returnType = getter.getReturnType()
+                Method setter = message.class.getMethod("set$name", returnType)
                 def value = it.text().trim()
-                if(getter.getReturnType() == long.class) {
+
+                if(returnType == long.class) {
                     setter.invoke(message, value.toLong())
-                } else if(getter.getReturnType().isEnum()) {
-                    setter.invoke(message, Enum.valueOf(getter.getReturnType(), value))
-                } else if(getter.getReturnType() == String.class) {
+                } else if(returnType == int.class) {
+                    setter.invoke(message, value.toInteger())
+                } else if(returnType == String.class) {
                     setter.invoke(message, value)
+                } else if(returnType.isEnum()) {
+                    setter.invoke(message, Enum.valueOf(returnType, value))
                 }
             } catch(NoSuchMethodException e) {}
         }
