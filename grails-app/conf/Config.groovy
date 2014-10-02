@@ -23,4 +23,4 @@ log4j = {
     warn   'org.mortbay.log'
 }
 
-wechat.api.url='https://api.weixin.qq.com/cgi-bin/'
+grails.wechat.api.url='https://api.weixin.qq.com/cgi-bin/'
