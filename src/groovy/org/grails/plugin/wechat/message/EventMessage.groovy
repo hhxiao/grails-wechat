@@ -11,4 +11,6 @@ class EventMessage extends Message {
     String latitude // 地理位置纬度
     String longitude // 地理位置经度
     String precision // 地理位置精度
+
+    String status   // 事件状态
 }
