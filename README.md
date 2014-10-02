@@ -7,11 +7,9 @@ Grails Wechat Integration Plugin, 微信公众平台 Grails 插件
 
 目前提供的接口:
 
-  1. WechatTokenService(Token服务，获取access_token)
-
-  2. WechatResponseService(消息响应服务，发送响应消息给客户端)
-
-  3. WechatCustomerService(客服接口，发送客服消息给客户端)
+1. WechatTokenService(Token服务，获取access_token)
+2. WechatResponseService(消息响应服务，发送响应消息给客户端)
+3. WechatCustomerService(客服接口，发送客服消息给客户端)
 
 ## Installation
 
@@ -20,10 +18,19 @@ To install the plugin add a dependency to BuildConfig.groovy:
 compile ":wechat:0.1"
 ~~~~~~~~~~~
 
-## Usage
+To config wechat appId, appSecret and appToken in Config.groovy:
+~~~~~~~~~~~
+grails.wechat.app.id='wx..................'
+grails.wechat.app.secret='856..................'
+grails.wechat.app.token='token..................'
 ~~~~~~~~~~~
 
-class SampleMessageService {
+## Usage
+
+Annotation based or conventional callback declaration
+
+~~~~~~~~~~~groovy
+class SampleService {
     def wechatResponseService
 
     @MessageHandler(value=MsgType.event, events=[EventType.subscribe, EventType.unsubscribe])
