@@ -1,9 +1,10 @@
 package org.grails.plugin.wechat.util
+
 import groovy.util.slurpersupport.GPathResult
-import org.grails.plugin.wechat.message.Message
-import org.grails.plugin.wechat.message.ResponseMessage
+import org.grails.plugin.wechat.message.*
 
 import java.lang.reflect.Method
+
 /**
  * Created by haihxiao on 2014/9/29.
  */
@@ -14,8 +15,7 @@ class MessageUtils {
  <FromUserName><![CDATA[${message.fromUserName}]]></FromUserName>
  <CreateTime>${message.createTime}</CreateTime>
  <MsgType><![CDATA[${message.msgType.name()}]]></MsgType>
-${message.getAdditionalResponseXml()}
- <MsgId>${message.msgId}</MsgId>
+ ${message.getAdditionalResponseXml()}
 </xml>
 """
     }
@@ -56,7 +56,10 @@ ${message.getAdditionalResponseXml()}
         return fromGPathResult(slurper.parseText(text))
     }
 
-    static long generateMessageId() {
-        System.nanoTime()
+    static Collection<MsgType> getApplicableMsgTypes(Class<? extends Message> messageClass) {
+        if(messageClass == Message.class) return MsgType.values()
+        String simpleName = messageClass.simpleName
+        MsgType msgType = MsgType.valueOf(simpleName.substring(0, simpleName.length() - 'message'.length()).toLowerCase())
+        return [msgType]
     }
 }

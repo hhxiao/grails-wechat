@@ -1,8 +1,6 @@
 package org.trails.plugin.wechat.util
 
-import org.grails.plugin.wechat.message.EventType
-import org.grails.plugin.wechat.message.Message
-import org.grails.plugin.wechat.message.MsgType
+import org.grails.plugin.wechat.message.*
 import org.grails.plugin.wechat.util.MessageUtils
 
 import static org.junit.Assert.assertEquals
@@ -152,5 +150,16 @@ class MessageUtilsTest extends GroovyTestCase {
         assertEquals(message.event, EventType.SCAN)
         assertEquals(message.eventKey, 'SCENE_VALUE')
         assertEquals(message.ticket, 'TICKET')
+    }
+
+    void testGetMsgTypes() {
+        def result = MessageUtils.getApplicableMsgTypes(Message.class)
+        assertTrue(result.containsAll(MsgType.values()))
+
+        result = MessageUtils.getApplicableMsgTypes(TextMessage.class)
+        assertTrue(result.containsAll(MsgType.text) && result.size() == 1)
+
+        result = MessageUtils.getApplicableMsgTypes(ImageMessage.class)
+        assertTrue(result.containsAll(MsgType.image) && result.size() == 1)
     }
 }
