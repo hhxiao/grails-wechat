@@ -47,6 +47,8 @@ class MessageUtils {
                     setter.invoke(message, value.toInteger())
                 } else if(returnType == String.class) {
                     setter.invoke(message, value)
+                } else if(returnType == EventType.class) {
+                    setter.invoke(message, EventType.of(value))
                 } else if(returnType.isEnum()) {
                     setter.invoke(message, Enum.valueOf(returnType, value))
                 }
