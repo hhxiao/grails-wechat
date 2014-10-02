@@ -25,9 +25,15 @@ grails.wechat.app.secret='856..................'
 grails.wechat.app.token='token..................'
 ~~~~~~~~~~~
 
+To config URL for server in wechat developer center
+~~~~~~~~~~~
+http://${hostname}/${appname}/wechat
+~~~~~~~~~~~
+
+
 ## Usage
 
-Annotation based or conventional callback declaration, message callback must accept one Message parameter(could be any one of the subclasses), and return a ResponseMessage result
+Annotation based or conventional message callback declaration, message callback must accept one Message parameter(could be any one of the subclasses), and return a ResponseMessage result
 
 ~~~~~~~~~~~groovy
 class SampleService {
@@ -81,6 +87,13 @@ class SampleService {
     @MessageHandler(value=MsgType.event, events=[EventType.LOCATION])
     ResponseMessage onLocationEvent(EventMessage message) {
         wechatResponseService.responseText(message, "收到位置事件: ${message.latitude}:${message.longitude}")
+    }
+
+    // Catch all messages
+    ResponseMessage onMessage(Message message) {
+        // handl the message ...
+        System.out.println("Got a ${message.msgType} message")
+        return null // return null to use response message from other callback
     }
 }
 
