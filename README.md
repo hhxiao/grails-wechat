@@ -1,11 +1,11 @@
 grails-wechat
 =============
 
-Grails Wechat Integration Plugin 
+Grails Wechat Integration Plugin, 微信公众平台 Grails 插件 
 
 ## Introduction
 
-微信公众平台 Grails 插件，目前提供的服务接口:
+目前提供的接口:
 
   1. WechatTokenService(Token服务，获取access_token)
 
