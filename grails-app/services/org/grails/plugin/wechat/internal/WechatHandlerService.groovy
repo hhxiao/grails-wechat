@@ -6,6 +6,8 @@ import org.grails.plugin.wechat.util.HandlersRegistry
 import org.grails.plugin.wechat.util.MessageUtils
 
 /**
+ * Internal service, supposed only called by WechatController
+ * 
  * Created by haihxiao on 2014/10/1.
  */
 class WechatHandlerService {
