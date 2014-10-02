@@ -27,7 +27,7 @@ grails.wechat.app.token='token..................'
 
 ## Usage
 
-Annotation based or conventional callback declaration
+Annotation based or conventional callback declaration, message callback must accept one Message parameter(could be any one of the subclasses), and return a ResponseMessage result
 
 ~~~~~~~~~~~groovy
 class SampleService {
