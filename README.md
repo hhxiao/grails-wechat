@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/hhxiao/grails-wechat.svg?branch=master)](https://travis-ci.org/hhxiao/grails-wechat)
+
 grails-wechat
 =============
 
