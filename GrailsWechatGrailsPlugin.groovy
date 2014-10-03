@@ -65,7 +65,6 @@ Grails plugin provides wechat integration features.
         // watching is modified and reloaded. The event contains: event.source,
         // event.application, event.manager, event.ctx, and event.plugin.
         def ctx = event.application.mainContext
-        def config = event.application.config.plugin.platformCore
 
         if (event.source instanceof Class && application.isServiceClass(event.source)) {
             ctx.wechatHandlersRegistry.reloadHandler(event.source)
