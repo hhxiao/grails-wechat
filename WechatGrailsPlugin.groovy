@@ -1,7 +1,6 @@
-import org.grails.plugin.wechat.WechatResponseService
 import org.grails.plugin.wechat.util.HandlersRegistry
 
-class GrailsWechatGrailsPlugin {
+class WechatGrailsPlugin {
     // the plugin version
     def version = "0.1"
     // the version or versions of Grails the plugin is designed for
