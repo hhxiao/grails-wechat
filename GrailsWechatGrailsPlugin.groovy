@@ -24,7 +24,7 @@ Grails plugin provides wechat integration features.
 '''
 
     // URL to the plugin's documentation
-    def documentation = "http://grails.org/plugin/grails-wechat"
+    def documentation = "https://github.com/hhxiao/grails-wechat"
 
     // Extra (optional) plugin metadata
 
