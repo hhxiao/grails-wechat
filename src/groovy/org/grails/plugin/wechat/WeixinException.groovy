@@ -1,12 +1,14 @@
 package org.grails.plugin.wechat
 
+import org.grails.plugin.wechat.bean.ReturnCode
+
 /**
  * Created by haihxiao on 2014/9/29.
  */
 class WeixinException extends RuntimeException {
-    Error err
+    ReturnCode err
 
-    WeixinException(Error err) {
+    WeixinException(ReturnCode err) {
         super(err.errmsg)
         this.err = err
     }
