@@ -1,4 +1,4 @@
-package org.grails.plugin.wechat.token
+package org.grails.plugin.wechat.bean
 /**
  * Created by hhxiao on 2014/9/29.
  */

@@ -1,7 +1,7 @@
 package org.grails.plugin.wechat
 
 import org.grails.plugin.wechat.annotation.VerificationRequired
-import org.grails.plugin.wechat.token.AccessToken
+import org.grails.plugin.wechat.bean.AccessToken
 import org.grails.plugin.wechat.util.HttpUtils
 import org.grails.plugin.wechat.util.JsonHelper
 /**
