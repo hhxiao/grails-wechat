@@ -41,7 +41,7 @@ abstract class Message {
         MsgType msgType = MsgType.valueOf(type)
         Message message = (Message)Thread.currentThread().getContextClassLoader().loadClass("${Message.package.name}.${type.capitalize()}Message").newInstance()
         message.msgType = msgType
-        println message.class
+
         message.class.methods.toList().each { println it.name }
         xml.children().findAll {it.name() != 'MsgType'}.each {
             String name = it.name()
