@@ -13,7 +13,8 @@ class JsonHelper {
 
     static <T> T parseJson(String text, Class<T> targetClass) throws WeixinException {
         if(text.contains("errcode")) {
-            throw gson.fromJson(text, WeixinException.class)
+            WeixinException.Error error = gson.fromJson(text, WeixinException.Error.class)
+            throw new WeixinException(error)
         }
         T t = gson.fromJson(text, targetClass)
         t.metaClass.toJson = { text }
