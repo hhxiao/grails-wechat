@@ -36,7 +36,7 @@ class SignatureHelper {
             log.error(e.message, e)
         }
         // 将sha1加密后的字符串可与signature对比
-        return signature.equals(tmpStr)
+        return signature.equalsIgnoreCase(tmpStr)
     }
 
     /**
