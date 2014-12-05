@@ -30,7 +30,7 @@ class WechatPromotionService {
         if(scene == QrScene.QR_SCENE) {
             req.put('expire_seconds', expire_seconds)
         }
-        String ret = HttpUtils.post(url, 'application/json', JsonHelper.toJson(req))
+        String ret = HttpUtils.postJson(url, JsonHelper.toJson(req))
         return JsonHelper.parseJson(ret, QrCode.class)
     }
 

@@ -19,7 +19,7 @@ class WechatTokenService implements InitializingBean {
     private AccessToken accessToken
     private Timer timer = new Timer()
 
-    synchronized AccessToken getAccessToken() throws WeixinException {
+    synchronized AccessToken getAccessToken() throws WechatException {
         if(accessToken == null) {
             String url = ACCESS_TOKEN_URL.replace('APP_ID', appId).replace('APP_SECRET', appSecret)
             String text = HttpUtils.get(url)

@@ -18,26 +18,22 @@ class WeixinMenuService {
     void createMenu(String menuDefinitions) {
         AccessToken token = wechatTokenService.accessToken
         String url = MENU_CREATE_URL + token.accessToken
-        String ret = HttpUtils.post(url, 'application/json', JsonHelper.toJson(menuDefinitions))
-        ReturnCode code = JsonHelper.parseJson(ret, ReturnCode.class)
-        if(code.errcode) {
-            throw new WeixinException(code)
-        }
+        String ret = HttpUtils.postJson(url, menuDefinitions)
+        JsonHelper.parseJson(ret, ReturnCode.class)
     }
 
     String getMenu() {
         AccessToken token = wechatTokenService.accessToken
         String url = MENU_QUERY_URL + token.accessToken
-        HttpUtils.get(url)
+        String ret = HttpUtils.get(url)
+        JsonHelper.parseJson(ret, ReturnCode.class)
+        ret
     }
 
     void deleteMenu() {
         AccessToken token = wechatTokenService.accessToken
         String url = MENU_DELETE_URL + token.accessToken
         String ret = HttpUtils.get(url)
-        ReturnCode code = JsonHelper.parseJson(ret, ReturnCode.class)
-        if(code.errcode) {
-            throw new WeixinException(code)
-        }
+        JsonHelper.parseJson(ret, ReturnCode.class)
     }
 }
