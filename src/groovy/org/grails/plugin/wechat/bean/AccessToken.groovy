@@ -5,4 +5,8 @@ package org.grails.plugin.wechat.bean
 class AccessToken implements Serializable {
     String accessToken
     long expiresIn
+
+    long getExpiresInMillis() {
+        expiresIn * 1000
+    }
 }
