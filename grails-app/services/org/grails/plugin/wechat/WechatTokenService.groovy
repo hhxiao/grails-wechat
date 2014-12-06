@@ -56,6 +56,7 @@ class WechatTokenService implements InitializingBean {
                 accessToken = JsonHelper.parseJson(text, AccessToken.class)
                 tokenFile.text = text
                 log.info("AccessToken retrieved: ${accessToken.accessToken}")
+                expiresInMs = accessToken.expiresInMillis
             }
 
             // expire in about 2 hours
