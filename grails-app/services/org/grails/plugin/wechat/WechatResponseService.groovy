@@ -57,6 +57,13 @@ class WechatResponseService {
         return newsMessage
     }
 
+    @MessageHandler(exclude = true)
+    NewsMessage responseNews(Message message, List<Article> articles) {
+        NewsMessage newsMessage = initMessage(message, new NewsMessage())
+        newsMessage.articles = articles
+        return newsMessage
+    }
+
     private static <T extends Message> T initMessage(Message request, T response) {
         response.fromUserName = request.toUserName
         response.toUserName = request.fromUserName

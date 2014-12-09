@@ -7,12 +7,13 @@ import org.grails.plugin.wechat.util.MessageUtils
  * Created by haihxiao on 17/9/14.
  */
 class WechatController {
+    private static boolean productionEnv = Environment.getCurrent() == Environment.PRODUCTION
+
     static allowedMethods = [echo: "GET", post: "POST"]
 
     def wechatHandlerService
     def wechatTokenService
-
-    private static boolean productionEnv = Environment.getCurrent() == Environment.PRODUCTION
+    def securityHelper
 
     static beforeInterceptor = {
         String error = null
@@ -40,10 +41,19 @@ class WechatController {
     }
 
     def post() {
-        if(log.debugEnabled) {
-            log.debug(XmlUtil.serialize(request.XML))
-        }
         Message message = MessageUtils.fromGPathResult(request.XML)
-        render wechatHandlerService.handleMessage(message)
+        Object ret = securityHelper ? securityHelper.authenticate(message.fromUserName) : null
+        if(log.debugEnabled) {
+            if(ret) {
+                log.debug("${ret} - ${XmlUtil.serialize(request.XML)}")
+            } else {
+                log.debug(XmlUtil.serialize(request.XML))
+            }
+        }
+        try {
+            render wechatHandlerService.handleMessage(message)
+        } finally {
+            if(securityHelper) securityHelper.reset()
+        }
     }
 }

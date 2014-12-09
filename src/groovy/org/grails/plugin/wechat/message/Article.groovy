@@ -20,6 +20,6 @@ class Article {
     }
 
     Map<String, Object> toJson() {
-        [title: title?:'', description: description?:'', url: url?:'', picurl: picurl?:'']
+        [title: title?:'', description: description?:'', url: url?:'', picurl: picUrl?:'']
     }
 }

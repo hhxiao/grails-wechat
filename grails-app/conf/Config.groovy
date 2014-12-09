@@ -23,4 +23,6 @@ log4j = {
     warn   'org.mortbay.log'
 }
 
+grails.plugins.wechat.integration.security = false
+
 grails.wechat.api.url='https://api.weixin.qq.com/cgi-bin/'

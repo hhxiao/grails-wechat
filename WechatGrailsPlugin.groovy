@@ -1,4 +1,5 @@
 import org.grails.plugin.wechat.util.HandlersRegistry
+import org.grails.plugin.wechat.util.SecurityHelper
 
 class WechatGrailsPlugin {
     // the plugin version
@@ -50,6 +51,18 @@ Grails plugin provides wechat integration features.
     def doWithSpring = {
         wechatHandlersRegistry(HandlersRegistry) { bean ->
             grailsApplication = ref('grailsApplication')
+        }
+        def conf = application.config.grails.plugins.wechat.integration
+        if(conf.security) {
+            if(conf.user) {
+                String domainClassName = conf.user.domainClassName?.toString()
+                String enabledPropertyName = conf.user.enabledPropertyName?.toString()
+                String wechatField = conf.user.wechatField?.toString()
+                String injectField = conf.user.injectField?.toString()
+
+                securityHelper(SecurityHelper, application, domainClassName, enabledPropertyName, wechatField, injectField) { bean ->
+                }
+            }
         }
     }
 
