@@ -1,6 +1,5 @@
 package org.grails.plugin.wechat
 import grails.util.Environment
-import groovy.xml.XmlUtil
 import org.grails.plugin.wechat.message.Message
 import org.grails.plugin.wechat.util.MessageUtils
 /**
@@ -45,11 +44,12 @@ class WechatController {
         Object ret = securityHelper ? securityHelper.authenticate(message.fromUserName) : null
         if(log.debugEnabled) {
             if(ret) {
-                log.debug("${ret} - ${XmlUtil.serialize(request.XML)}")
+                log.debug("${ret} - ${message.toString()}")
             } else {
-                log.debug(XmlUtil.serialize(request.XML))
+                log.debug(message.toString())
             }
         }
+        println message
         try {
             render wechatHandlerService.handleMessage(message)
         } finally {

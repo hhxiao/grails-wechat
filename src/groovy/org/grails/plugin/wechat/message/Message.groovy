@@ -34,6 +34,21 @@ abstract class Message {
      */
     long createTime
 
+    String toXml() {
+        """<?xml version="1.0" encoding="UTF-8"?><xml>
+  <MsgId>$msgId</MsgId>
+  <ToUserName>$toUserName</ToUserName>
+  <FromUserName>$fromUserName</FromUserName>
+  <CreateTime>$createTime</CreateTime>
+  <MsgType>$msgType</MsgType>
+</xml>
+"""
+    }
+
+    String toString() {
+        "$msgId.${msgType}.${toUserName}<-${fromUserName}@$createTime"
+    }
+
     static Message fromXml(String text) {
         XmlSlurper slurper = new XmlSlurper()
         def xml = slurper.parseText(text)
