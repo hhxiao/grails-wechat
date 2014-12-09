@@ -19,4 +19,9 @@ ${articles.collect{it.toXml()}.join('')} </Articles>"""
     Map<String, Object> getAdditionalResponseJson() {
         ['articles': articles.collect{ it.toJson() }]
     }
+
+    @Override
+    String toString() {
+        "${super.toString()}:${articles.collect {it.title}}"
+    }
 }

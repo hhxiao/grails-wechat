@@ -26,4 +26,9 @@ class MusicMessage extends Message implements ResponseMessage {
         ['media_id': mediaId?:'', 'thumb_media_id': thumbMediaId?:'', 'title': title?:'',
          'description': description?:'', 'musicurl': musicUrl?:'', 'hqmusicurl': hqMusicUrl?:'']
     }
+
+    @Override
+    String toString() {
+        "${super.toString()}:${mediaId}"
+    }
 }

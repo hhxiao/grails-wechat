@@ -22,4 +22,9 @@ class EventMessage extends Message {
     String scanCodeInfo // 扫描信息
     String scanType     // 扫描类型，一般是qrcode
     String scanResult   // 扫描结果，即二维码对应的字符串信息
+
+    @Override
+    String toString() {
+        "${super.toString()}:${event}:${eventKey}"
+    }
 }

@@ -13,4 +13,9 @@ class TextMessage extends Message implements ResponseMessage {
     Map<String, Object> getAdditionalResponseJson() {
         ['content': content?:'']
     }
+
+    @Override
+    String toString() {
+        "${super.toString()}:${content}"
+    }
 }

@@ -14,4 +14,8 @@ class ImageMessage extends Message implements ResponseMessage {
     Map<String, Object> getAdditionalResponseJson() {
         ['media_id': mediaId?:'']
     }
+    @Override
+    String toString() {
+        "${super.toString()}:${picUrl}"
+    }
 }

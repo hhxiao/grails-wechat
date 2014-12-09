@@ -8,4 +8,9 @@ class LocationMessage extends Message {
     String location_Y // 地理位置经度
     String scale // 地图缩放大小
     String label // 地理位置信息
+
+    @Override
+    String toString() {
+        "${super.toString()}:${label}"
+    }
 }

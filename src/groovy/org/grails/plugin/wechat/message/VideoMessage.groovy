@@ -21,4 +21,9 @@ class VideoMessage extends Message implements ResponseMessage {
     Map<String, Object> getAdditionalResponseJson() {
         ['media_id': mediaId?:'', 'thumb_media_id': thumbMediaId?:'', 'title': title?:'', 'description': description?:'']
     }
+
+    @Override
+    String toString() {
+        "${super.toString()}:${mediaId}"
+    }
 }
