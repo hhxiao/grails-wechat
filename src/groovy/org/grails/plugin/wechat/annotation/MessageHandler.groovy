@@ -17,5 +17,6 @@ import java.lang.annotation.Target
 public @interface MessageHandler {
     MsgType[] value() default [];
     EventType[] events() default [];
+    String[] keys() default [];
     boolean exclude() default false;
 }

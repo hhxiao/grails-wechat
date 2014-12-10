@@ -13,21 +13,30 @@ class HandlersRegistry {
     def grailsApplication
 
     class Handler {
-        Handler(Collection<MsgType> msgTypes, Collection<EventType> eventTypes, Method method, Class serviceClass) {
+        Handler(Collection<MsgType> msgTypes, Collection<EventType> eventTypes, Collection<String> eventKeys, Method method, Class serviceClass) {
             this.msgTypes = msgTypes
             this.eventTypes = eventTypes
+            this.eventKeys = eventKeys
             this.method = method
             this.serviceClass = serviceClass
         }
 
         Collection<MsgType> msgTypes
         Collection<EventType> eventTypes
+        Collection<String> eventKeys
         Method method
         Class serviceClass
         Object serviceInstance
 
         boolean applied(Message message) {
             if(msgTypes.contains(message.msgType)) {
+                if(message.msgType == MsgType.event) {
+                    EventMessage eventMessage = (EventMessage)message
+                    if(eventTypes.contains(eventMessage.event)) {
+                        return (eventKeys.empty || eventKeys.contains(eventMessage.eventKey))
+                    }
+                    return false
+                }
                 if(message.msgType == MsgType.event && eventTypes.contains(((EventMessage)message).event)) {
                     return true
                 } else if(message.msgType != MsgType.event) {
@@ -95,24 +104,31 @@ class HandlersRegistry {
         if(messageHandler == null) {
             Collection<MsgType> msgTypes = MessageUtils.getApplicableMsgTypes(method.getParameterTypes()[0])
             Collection<EventType> eventTypes = []
+            Collection<String> eventKeys = messageHandler.keys().toList()
             if(msgTypes.contains(MsgType.event)) eventTypes = EventType.values()
-            handlers.add(new Handler(msgTypes, eventTypes, method, serviceClass))
+            handlers.add(new Handler(msgTypes, eventTypes, eventKeys, method, serviceClass))
         } else {
             Collection<MsgType> msgTypes = messageHandler.value().toList()
             Collection<EventType> eventTypes = messageHandler.events().toList()
+            Collection<String> eventKeys = messageHandler.keys().toList()
             if(msgTypes.contains(MsgType.event) && eventTypes.empty) eventTypes = EventType.values()
-            handlers.add(new Handler(msgTypes, eventTypes, method, serviceClass))
+            handlers.add(new Handler(msgTypes, eventTypes, eventKeys, method, serviceClass))
         }
     }
 
-    List<Handler> getMessageHandlers(Message message) {
+    Collection<Handler> getMessageHandlers(Message message) {
         List<Handler> messageHandlers = new ArrayList<>()
         serviceHandlers.each { serviceClass, handlers ->
             handlers.each { handler ->
                 if(handler.applied(message)) messageHandlers << handler
             }
         }
-
+        Collections.sort(messageHandlers, new Comparator<Handler>() {
+            @Override
+            int compare(Handler o1, Handler o2) {
+                return o1.eventKeys.size() - o2.eventKeys.size()
+            }
+        })
         return messageHandlers
     }
 }

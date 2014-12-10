@@ -17,14 +17,14 @@ class WechatHandlerService {
         String fromUserName = message.fromUserName
         String toUserName = message.toUserName
 
-        List<HandlersRegistry.Handler> messageHandlers = wechatHandlersRegistry.getMessageHandlers(message)
+        Collection<HandlersRegistry.Handler> messageHandlers = wechatHandlersRegistry.getMessageHandlers(message)
 
-        Object result = null
+        ResponseMessage result = null
         messageHandlers.each {
-            Object res = it.process(message)
+            ResponseMessage res = it.process(message)
             if(res != null) result = res
         }
-        if(result instanceof ResponseMessage) {
+        if(result) {
             ((Message)result).fromUserName = toUserName
             ((Message)result).toUserName = fromUserName
             return MessageUtils.toXml(result)
