@@ -36,7 +36,6 @@ abstract class Message {
 
     String toXml() {
         """<?xml version="1.0" encoding="UTF-8"?><xml>
-  <MsgId>$msgId</MsgId>
   <ToUserName>$toUserName</ToUserName>
   <FromUserName>$fromUserName</FromUserName>
   <CreateTime>$createTime</CreateTime>
@@ -46,7 +45,7 @@ abstract class Message {
     }
 
     String toString() {
-        "$msgId.${msgType}.${toUserName}<-${fromUserName}@$createTime"
+        "${msgType}.${toUserName}<-${fromUserName}@$createTime"
     }
 
     static Message fromXml(String text) {
