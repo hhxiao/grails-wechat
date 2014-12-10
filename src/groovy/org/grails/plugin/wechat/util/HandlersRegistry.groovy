@@ -126,7 +126,11 @@ class HandlersRegistry {
         Collections.sort(messageHandlers, new Comparator<Handler>() {
             @Override
             int compare(Handler o1, Handler o2) {
-                return o1.eventKeys.size() - o2.eventKeys.size()
+                int res = o1.eventTypes.size() - o2.eventTypes.size()
+                if(res == 0) {
+                    return o1.eventKeys.size() - o2.eventKeys.size()
+                }
+                return res
             }
         })
         return messageHandlers
