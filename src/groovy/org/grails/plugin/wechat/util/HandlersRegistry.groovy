@@ -104,7 +104,7 @@ class HandlersRegistry {
         if(messageHandler == null) {
             Collection<MsgType> msgTypes = MessageUtils.getApplicableMsgTypes(method.getParameterTypes()[0])
             Collection<EventType> eventTypes = []
-            Collection<String> eventKeys = messageHandler.keys().toList()
+            Collection<String> eventKeys = []
             if(msgTypes.contains(MsgType.event)) eventTypes = EventType.values()
             handlers.add(new Handler(msgTypes, eventTypes, eventKeys, method, serviceClass))
         } else {
