@@ -1,6 +1,7 @@
 package org.grails.plugin.wechat
 import grails.util.Environment
 import groovy.util.slurpersupport.GPathResult
+import groovy.xml.XmlUtil
 import org.grails.plugin.wechat.message.Message
 import org.grails.plugin.wechat.util.MessageUtils
 /**
@@ -42,13 +43,10 @@ class WechatController {
 
     def post() {
         Message message = MessageUtils.fromGPathResult(request.XML as GPathResult)
-        Object ret = securityHelper ? securityHelper.authenticate(message.fromUserName) : null
+        securityHelper ? securityHelper.authenticate(message.fromUserName) : null
         if(log.debugEnabled) {
-            if(ret) {
-                log.debug("${ret} - ${message.toString()}")
-            } else {
-                log.debug(message.toString())
-            }
+            log.debug("${params.signature}|${params.timestamp}|${params.nonce}|${message}")
+            log.debug(XmlUtil.serialize(request.XML))
         }
         try {
             render wechatHandlerService.handleMessage(message)
