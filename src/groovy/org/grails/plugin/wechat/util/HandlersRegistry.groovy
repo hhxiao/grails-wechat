@@ -13,12 +13,13 @@ class HandlersRegistry {
     def grailsApplication
 
     class Handler {
-        Handler(Collection<MsgType> msgTypes, Collection<EventType> eventTypes, Collection<String> eventKeys, Method method, Class serviceClass) {
+        Handler(Collection<MsgType> msgTypes, Collection<EventType> eventTypes, Collection<String> eventKeys, int priority, Method method, Class serviceClass) {
             this.msgTypes = msgTypes
             this.eventTypes = eventTypes
             this.eventKeys = eventKeys
             this.method = method
             this.serviceClass = serviceClass
+            this.priority = priority
         }
 
         Collection<MsgType> msgTypes
@@ -27,6 +28,7 @@ class HandlersRegistry {
         Method method
         Class serviceClass
         Object serviceInstance
+        int priority
 
         boolean applied(Message message) {
             if(msgTypes.contains(message.msgType)) {
@@ -106,13 +108,13 @@ class HandlersRegistry {
             Collection<EventType> eventTypes = []
             Collection<String> eventKeys = []
             if(msgTypes.contains(MsgType.event)) eventTypes = EventType.values()
-            handlers.add(new Handler(msgTypes, eventTypes, eventKeys, method, serviceClass))
+            handlers.add(new Handler(msgTypes, eventTypes, eventKeys, 0, method, serviceClass))
         } else {
             Collection<MsgType> msgTypes = messageHandler.value().toList()
             Collection<EventType> eventTypes = messageHandler.events().toList()
             Collection<String> eventKeys = messageHandler.keys().toList()
             if(msgTypes.contains(MsgType.event) && eventTypes.empty) eventTypes = EventType.values()
-            handlers.add(new Handler(msgTypes, eventTypes, eventKeys, method, serviceClass))
+            handlers.add(new Handler(msgTypes, eventTypes, eventKeys, messageHandler.priority(), method, serviceClass))
         }
     }
 
@@ -126,7 +128,10 @@ class HandlersRegistry {
         Collections.sort(messageHandlers, new Comparator<Handler>() {
             @Override
             int compare(Handler o1, Handler o2) {
-                int res = o1.eventTypes.size() - o2.eventTypes.size()
+                int res = o1.priority - o2.priority
+                if(res == 0) {
+                    return o1.eventTypes.size() - o2.eventTypes.size()
+                }
                 if(res == 0) {
                     return o1.eventKeys.size() - o2.eventKeys.size()
                 }

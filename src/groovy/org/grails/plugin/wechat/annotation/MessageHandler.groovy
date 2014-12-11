@@ -19,4 +19,5 @@ public @interface MessageHandler {
     EventType[] events() default [];
     String[] keys() default [];
     boolean exclude() default false;
+    int priority() default 0
 }
