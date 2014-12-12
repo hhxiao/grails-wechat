@@ -65,8 +65,8 @@ class WechatResponseService {
     }
 
     private static <T extends Message> T initMessage(Message request, T response) {
-        response.fromUserName = request.toUserName
-        response.toUserName = request.fromUserName
+        response.fromUserName = request?.toUserName
+        response.toUserName = request?.fromUserName
         return response
     }
 }
