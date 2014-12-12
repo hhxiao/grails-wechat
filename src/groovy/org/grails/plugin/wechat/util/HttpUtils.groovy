@@ -14,6 +14,10 @@ class HttpUtils {
         post(url, CONTENT_TYPE_JSON, content)
     }
 
+    static String postJson(String url, Map content) {
+        postJson(url, JsonHelper.toJson(content))
+    }
+
     static String post(String url, String contentType, String content) {
         HttpURLConnection conn = (HttpURLConnection)new URL(url).openConnection()
         conn.setRequestProperty("Content-Type", contentType)
