@@ -8,7 +8,7 @@ import org.grails.plugin.wechat.util.JsonHelper
 /**
  * Created by haihxiao on 2014/12/5.
  */
-class WeixinMenuService {
+class WechatMenuService {
     private static final String MENU_CREATE_URL = 'https://api.weixin.qq.com/cgi-bin/menu/create?access_token='
     private static final String MENU_QUERY_URL = 'https://api.weixin.qq.com/cgi-bin/menu/get?access_token='
     private static final String MENU_DELETE_URL = 'https://api.weixin.qq.com/cgi-bin/menu/delete?access_token='
