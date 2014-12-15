@@ -7,7 +7,7 @@ class HttpUtils {
     public static final String CONTENT_TYPE_JSON = 'application/json'
 
     static String get(String url) {
-        new URL(url).text
+        new URL(url).getText('UTF-8')
     }
 
     static String postJson(String url, String content) {
