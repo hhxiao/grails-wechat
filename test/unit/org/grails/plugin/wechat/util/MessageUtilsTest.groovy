@@ -1,4 +1,4 @@
-package org.trails.plugin.wechat.util
+package org.grails.plugin.wechat.util
 
 import org.grails.plugin.wechat.message.*
 import org.grails.plugin.wechat.util.MessageUtils
