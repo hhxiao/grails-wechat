@@ -1,9 +1,12 @@
 package org.grails.plugin.wechat
+
 import grails.util.Environment
 import groovy.util.slurpersupport.GPathResult
 import groovy.xml.XmlUtil
 import org.grails.plugin.wechat.message.Message
 import org.grails.plugin.wechat.util.MessageUtils
+import org.grails.plugin.wechat.util.WechatSessionHelper
+
 /**
  * Created by haihxiao on 17/9/14.
  */
@@ -49,8 +52,10 @@ class WechatController {
             log.debug(XmlUtil.serialize(request.XML))
         }
         try {
+            WechatSessionHelper.set(message.fromUserName)
             render wechatHandlerService.handleMessage(message)
         } finally {
+            WechatSessionHelper.reset()
             if(securityHelper) securityHelper.reset()
         }
     }
