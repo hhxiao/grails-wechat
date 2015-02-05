@@ -1,5 +1,6 @@
 package org.grails.plugin.wechat
 
+import org.grails.plugin.wechat.bean.AccessToken
 import org.grails.plugin.wechat.message.ResponseMessage
 import org.grails.plugin.wechat.util.HttpUtils
 import org.grails.plugin.wechat.util.MessageUtils
@@ -14,8 +15,8 @@ class WechatCustomerService {
     def wechatTokenService
 
     String sendMessage(ResponseMessage message) {
-        String accessToken = wechatTokenService.accessToken
-        String url = CUSTOM_SERVICE_URL.replace('ACCESS_TOKEN', accessToken)
+        AccessToken token = wechatTokenService.accessToken
+        String url = CUSTOM_SERVICE_URL.replace('ACCESS_TOKEN', token.accessToken)
         HttpUtils.postJson(url, MessageUtils.toJson(message))
     }
 }
