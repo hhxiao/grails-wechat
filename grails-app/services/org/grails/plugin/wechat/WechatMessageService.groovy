@@ -13,23 +13,23 @@ class WechatMessageService {
 
     def wechatTokenService
 
-    def sendNews(String mediaId, def to = '') {
+    def sendNews(String mediaId, def to = null) {
         sendMessage(to, MessageType.MPNEWS, mediaId)
     }
 
-    def sendText(String content, def to = '') {
+    def sendText(String content, def to = null) {
         sendMessage(to, MessageType.TEXT, content)
     }
 
-    def sendVoice(String mediaId, def to = '') {
+    def sendVoice(String mediaId, def to = null) {
         sendMessage(to, MessageType.VOICE, mediaId)
     }
 
-    def sendImage(String mediaId, def to = '') {
+    def sendImage(String mediaId, def to = null) {
         sendMessage(to, MessageType.IMAGE, mediaId)
     }
 
-    def sendVideo(String mediaId, def to = '') {
+    def sendVideo(String mediaId, def to = null) {
         sendMessage(to, MessageType.VIDEO, mediaId)
     }
 
@@ -37,13 +37,14 @@ class WechatMessageService {
         def msg = ['msgtype': type.title]
         msg.put(type.title, type.getContent(content))
         if(to instanceof String) {
-            msg.put('filter', ['is_to_all': false, 'group_id': to])
+            msg.put('filter', ['is_to_all': false, 'group_id': "${to}"])
         } else if(to instanceof Collection) {
             msg.put('touser', to)
         } else {
             msg.put('filter', ['is_to_all': true])
         }
-        String url = MASS_MESSAGE_URL + wechatTokenService.accessToken
-        HttpUtils.postJson(url, msg)
+        String url = MASS_MESSAGE_URL + wechatTokenService.accessToken.accessToken
+        String result = HttpUtils.postJson(url, msg)
+        log.info("${type} message sent to ${to} - ${result}")
     }
 }
