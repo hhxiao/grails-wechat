@@ -24,6 +24,8 @@ class WechatUser {
     String province
     String country
     String headimgurl
-    long subscribeTime
     String unionid
+
+    Date dateCreated = new Date()
+    Date lastUpdated = new Date()
 }
