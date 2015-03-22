@@ -15,7 +15,7 @@ class SecurityHelper {
 
     SecurityHelper(GrailsApplication application, String domainClassName, String enabledPropertyName, String wechatField, String injectField) {
         this.domainClass = application.getDomainClass(domainClassName).clazz
-        this.enabledPropertyName = enabledPropertyName.capitalize()
+        this.enabledPropertyName = enabledPropertyName ? enabledPropertyName.capitalize() : null
         this.wechatField = wechatField.capitalize()
 
         this.domainClass.metaClass.static."get${injectField.capitalize()}" = {
@@ -24,7 +24,12 @@ class SecurityHelper {
     }
 
     Object authenticate(String wechatId) {
-        def user = domainClass."findBy${wechatField}And${enabledPropertyName}"(wechatId, true)
+        def user
+        if(enabledPropertyName) {
+            user = domainClass."findBy${wechatField}And${enabledPropertyName}"(wechatId, true)
+        } else {
+            user = domainClass."findBy${wechatField}"(wechatId)
+        }
         if(user) {
             Wrapper.set(user)
             if(log.debugEnabled) log.debug("Authencitated $wechatId to ${user}")
