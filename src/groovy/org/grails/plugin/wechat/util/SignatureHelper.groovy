@@ -13,6 +13,26 @@ class SignatureHelper {
     private static Log log = LogFactory.getLog(SignatureHelper.class)
 
     /**
+     * 对参数进行签名， refer to: https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=4_3
+     * @param body
+     * @return the signature
+     */
+    public static String sign(Map<String, String> body) {
+        def sortedBody = new LinkedHashMap(body)
+        sortedBody.sort()
+        String str = sortedBody.entrySet().collect{"${it.key}=${it.value}"}.join('&')
+        try {
+            // 将三个参数字符串拼接成一个字符串进行sha1加密
+            MessageDigest md = MessageDigest.getInstance("SHA-1")
+            byte[] digest = md.digest(str.getBytes())
+            str = byteToStr(digest)
+        } catch (NoSuchAlgorithmException e) {
+            log.error(e.message, e)
+        }
+        return str
+    }
+
+    /**
      * 验证签名
      *
      * @param token

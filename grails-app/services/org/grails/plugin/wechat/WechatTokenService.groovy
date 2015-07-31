@@ -12,12 +12,23 @@ class WechatTokenService implements InitializingBean {
 
     def grailsApplication
 
-    private String appId
-    private String appSecret
-    private String appToken
+    private String _appId
+    private String _appSecret
+    private String _appToken
+
+    private String _mchId
+
     private AccessToken accessToken
     private Timer timer = new Timer()
     private File tokenFile = null
+
+    String getAppId() {
+        _appId
+    }
+
+    String getMerchantId() {
+        _mchId
+    }
 
     synchronized AccessToken getAccessToken() throws WechatException {
         if(accessToken == null) {
@@ -75,15 +86,17 @@ class WechatTokenService implements InitializingBean {
     }
 
     boolean checkSignature(String signature, String timestamp, String nonce) {
-        SignatureHelper.checkSignature(appToken, signature, timestamp, nonce)
+        SignatureHelper.checkSignature(_appToken, signature, timestamp, nonce)
     }
 
     @Override
     void afterPropertiesSet() throws Exception {
-        appId = grailsApplication.config.grails?.wechat.app?.id?.toString()
-        appSecret = grailsApplication.config.grails?.wechat.app?.secret?.toString()
-        appToken = grailsApplication.config.grails?.wechat.app?.token?.toString()
-        if(!appId || !appSecret || !appToken) {
+        _appId = grailsApplication.config.grails?.wechat.app?.id?.toString()
+        _appSecret = grailsApplication.config.grails?.wechat.app?.secret?.toString()
+        _appToken = grailsApplication.config.grails?.wechat.app?.token?.toString()
+        _mchId = grailsApplication.config.grails?.wechat.mch?.id?.toString()
+
+        if(!_appId || !_appSecret || !_appToken) {
             throw new IllegalStateException("Weixin AppId or AppSecret or AppToken is not configured")
         }
     }
