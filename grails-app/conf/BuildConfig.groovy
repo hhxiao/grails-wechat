@@ -28,6 +28,7 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.21'
         compile 'com.google.code.gson:gson:2.3.1'
         compile 'org.apache.httpcomponents:httpmime:4.3.6'
+        compile 'commons-codec:commons-codec:1.9'
     }
 
     plugins {
