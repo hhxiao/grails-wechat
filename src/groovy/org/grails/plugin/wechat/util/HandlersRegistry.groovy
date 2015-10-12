@@ -13,6 +13,14 @@ class HandlersRegistry {
     def grailsApplication
 
     class Handler {
+        Collection<MsgType> msgTypes
+        Collection<EventType> eventTypes
+        Collection<String> eventKeys
+        Method method
+        Class serviceClass
+        Object serviceInstance
+        int priority
+
         Handler(Collection<MsgType> msgTypes, Collection<EventType> eventTypes, Collection<String> eventKeys, int priority, Method method, Class serviceClass) {
             this.msgTypes = msgTypes
             this.eventTypes = eventTypes
@@ -21,14 +29,6 @@ class HandlersRegistry {
             this.serviceClass = serviceClass
             this.priority = priority
         }
-
-        Collection<MsgType> msgTypes
-        Collection<EventType> eventTypes
-        Collection<String> eventKeys
-        Method method
-        Class serviceClass
-        Object serviceInstance
-        int priority
 
         boolean applied(Message message) {
             if(msgTypes.contains(message.msgType)) {
@@ -52,11 +52,36 @@ class HandlersRegistry {
             if(serviceInstance == null) {
                 serviceInstance = grailsApplication.mainContext.getBean(serviceClass)
             }
-            method.invoke(serviceInstance, message)
+            (ResponseMessage)method.invoke(serviceInstance, message)
         }
     }
 
-    private Map<Class, List<Handler>> serviceHandlers = new HashMap<>()
+    class PaymentHandler {
+        Method method
+        Class serviceClass
+        Object serviceInstance
+        int priority
+
+        PaymentHandler(int priority, Method method, Class serviceClass) {
+            this.method = method
+            this.serviceClass = serviceClass
+            this.priority = priority
+        }
+
+        boolean applied(String openId, String productId) {
+            return true
+        }
+
+        String process(String openId, String productId) {
+            if(serviceInstance == null) {
+                serviceInstance = grailsApplication.mainContext.getBean(serviceClass)
+            }
+            (String)method.invoke(serviceInstance, openId, productId)
+        }
+    }
+
+    private Map<Class, List<Handler>> messageHandlers = new HashMap<>()
+    private Map<Class, List<PaymentHandler>> paymentHandlers = new HashMap<>()
 
     void reloadHandlers() {
         unregisterHandlers([])
@@ -70,31 +95,47 @@ class HandlersRegistry {
 
     void registerHandlers(Collection<Class> serviceClasses) {
         serviceClasses.each {
-            List<Handler> handlers = getServiceHandlers(it)
+            List<Handler> handlers = findMessageHandlers(it)
             if(handlers) {
-                serviceHandlers.put(it, handlers)
+                this.messageHandlers.put(it, handlers)
+            }
+            List<PaymentHandler> paymentHandlers = findPaymentHandlers(it)
+            if(paymentHandlers) {
+                this.paymentHandlers.put(it, paymentHandlers)
             }
         }
     }
 
     void unregisterHandlers(Collection<Class> serviceClasses) {
         serviceClasses.each {
-            serviceHandlers.remove(it)
+            messageHandlers.remove(it)
+            paymentHandlers.remove(it)
         }
     }
 
-    private List<Handler> getServiceHandlers(Class serviceClass) {
+    private List<Handler> findMessageHandlers(Class serviceClass) {
         List<Handler> handlers = new ArrayList<>()
         ReflectionUtils.doWithMethods(serviceClass, new ReflectionUtils.MethodCallback() {
             @Override
             void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
-                findHandler(serviceClass, method, handlers)
+                findMessageHandler(serviceClass, method, handlers)
             }
         })
         handlers
     }
 
-    private void findHandler(Class serviceClass, Method method, List<Handler> handlers) {
+    private List<PaymentHandler> findPaymentHandlers(Class serviceClass) {
+        List<PaymentHandler> handlers = new ArrayList<>()
+        ReflectionUtils.doWithMethods(serviceClass, new ReflectionUtils.MethodCallback() {
+            @Override
+            void doWith(Method method) throws IllegalArgumentException, IllegalAccessException {
+                findPaymentHandler(serviceClass, method, handlers)
+            }
+        })
+        handlers
+    }
+
+    private void findMessageHandler(Class serviceClass, Method method, List<Handler> handlers) {
         if(!ResponseMessage.class.isAssignableFrom(method.getReturnType())) return
         if(method.getParameterTypes().length != 1) return
 
@@ -118,14 +159,27 @@ class HandlersRegistry {
         }
     }
 
+    private void findPaymentHandler(Class serviceClass, Method method, List<PaymentHandler> handlers) {
+        if(String.class != method.getReturnType()) return
+        if(method.getParameterTypes().length != 2) return
+        if(String.class != method.getParameterTypes()[0]) return
+        if(String.class != method.getParameterTypes()[1]) return
+
+        org.grails.plugin.wechat.annotation.PaymentHandler paymentHandler = method.getAnnotation(org.grails.plugin.wechat.annotation.PaymentHandler.class)
+        if(paymentHandler && paymentHandler.exclude()) return
+        if(paymentHandler) {
+            handlers.add(new PaymentHandler(paymentHandler.priority(), method, serviceClass))
+        }
+    }
+
     Collection<Handler> getMessageHandlers(Message message) {
-        List<Handler> messageHandlers = new ArrayList<>()
-        serviceHandlers.each { serviceClass, handlers ->
-            handlers.each { handler ->
-                if(handler.applied(message)) messageHandlers << handler
+        List<Handler> handlers = new ArrayList<>()
+        this.messageHandlers.each { serviceClass, hs ->
+            hs.each { handler ->
+                if(handler.applied(message)) handlers << handler
             }
         }
-        Collections.sort(messageHandlers, new Comparator<Handler>() {
+        Collections.sort(handlers, new Comparator<Handler>() {
             @Override
             int compare(Handler o1, Handler o2) {
                 int res = o1.priority - o2.priority
@@ -138,6 +192,22 @@ class HandlersRegistry {
                 return res
             }
         })
-        return messageHandlers
+        return handlers
+    }
+
+    Collection<PaymentHandler> getPaymentHandlers(String openId, String productId) {
+        List<PaymentHandler> handlers = new ArrayList<>()
+        this.paymentHandlers.each { serviceClass, hs ->
+            hs.each { handler ->
+                if(handler.applied(openId, productId)) handlers << handler
+            }
+        }
+        Collections.sort(handlers, new Comparator<PaymentHandler>() {
+            @Override
+            int compare(PaymentHandler o1, PaymentHandler o2) {
+                return o1.priority - o2.priority
+            }
+        })
+        return handlers
     }
 }

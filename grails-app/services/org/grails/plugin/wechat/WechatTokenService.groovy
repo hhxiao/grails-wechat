@@ -22,11 +22,6 @@ class WechatTokenService implements InitializingBean {
     private String _appSecret
     private String _appToken
 
-    private String _payMchId
-    private String _payKey
-    private String _payIp
-    private String _payCallback
-
     private AccessToken accessToken
     private Timer timer = new Timer()
     private File tokenFile = null
@@ -41,22 +36,6 @@ class WechatTokenService implements InitializingBean {
 
     String getAppToken() {
         _appToken
-    }
-
-    String getMerchantId() {
-        _payMchId
-    }
-
-    String getPaymentKey() {
-        _payKey
-    }
-
-    String getPaymentIp() {
-        _payIp ?: InetAddress.getLocalHost().hostAddress
-    }
-
-    String getPaymentCallback() {
-        _payCallback
     }
 
     String getAuthUrl(String redirectUrl, String scope, String state = '') {
@@ -150,11 +129,6 @@ class WechatTokenService implements InitializingBean {
         _appId = grailsApplication.config.grails?.wechat.app?.id?.toString()
         _appSecret = grailsApplication.config.grails?.wechat.app?.secret?.toString()
         _appToken = grailsApplication.config.grails?.wechat.app?.token?.toString()
-
-        _payMchId = grailsApplication.config.grails?.wechat.pay?.mch?.toString()
-        _payKey = grailsApplication.config.grails?.wechat.pay?.key?.toString()
-        _payIp = grailsApplication.config.grails?.wechat.pay?.ip?.toString()
-        _payCallback = grailsApplication.config.grails?.wechat.pay?.callback?.toString()
 
         if(!_appId || !_appSecret || !_appToken) {
             throw new IllegalStateException("Weixin AppId or AppSecret or AppToken is not configured")

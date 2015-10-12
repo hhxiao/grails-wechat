@@ -5,7 +5,10 @@ class WechatUrlMappings {
             action = [GET: "echo", POST: "post"]
         }
         "/wechat_pay"(controller: "wechatPay", parseRequest: true) {
-            action = [POST: "post"]
+            action = [GET: "echo", POST: "callback"]
+        }
+        "/wechat_pay_result"(controller: "wechatPay", parseRequest: true) {
+            action = [GET: "echo", POST: "result"]
         }
     }
 }

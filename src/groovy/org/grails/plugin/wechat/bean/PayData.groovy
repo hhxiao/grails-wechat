@@ -1,14 +1,18 @@
 package org.grails.plugin.wechat.bean
-
 import org.grails.plugin.wechat.util.SignatureHelper
-import org.grails.plugin.wechat.util.StringUtils
-
 /**
  * Created by haihxiao on 8/1/2015.
  */
 enum PayDataKey {
     appid,
     attach,
+    bank_type,
+    bill_date,
+    bill_type,
+    cash_fee,
+    cash_fee_type,
+    coupon_fee,
+    coupon_count,
     body,
     detail,
     device_info,
@@ -19,14 +23,22 @@ enum PayDataKey {
     nonce_str,
     notify_url,
     openid,
+    op_user_id,
     out_trade_no,
+    out_refund_no,
     product_id,
     spbill_create_ip,
     total_fee,
+    trade_state,
+    trade_state_desc,
     trade_type,
+    time_end,
     time_expire,
     time_start,
     sign,
+    transaction_id,
+    refund_id,
+    refund_fee,
     result_code,
     return_code,
     return_msg,

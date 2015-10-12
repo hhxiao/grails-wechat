@@ -46,7 +46,7 @@ class WechatController {
 
     def post() {
         Message message = MessageUtils.fromGPathResult(request.XML as GPathResult)
-        securityHelper ? securityHelper.authenticate(message.fromUserName) : null
+        securityHelper ? securityHelper.(message.fromUserName) : null
         if(log.debugEnabled) {
             log.debug("${params.signature}|${params.timestamp}|${params.nonce}|${message}")
             log.debug(XmlUtil.serialize(request.XML))

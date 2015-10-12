@@ -31,4 +31,14 @@ class WechatHandlerService {
         }
         return ''
     }
+
+    String handlePayment(String openId, String productId) {
+        Collection<HandlersRegistry.PaymentHandler> paymentHandlers = wechatHandlersRegistry.getPaymentHandlers(openId, productId)
+        String prepayId = ""
+        paymentHandlers.each {
+            String res = it.process(openId, productId)
+            if(res != null) prepayId = res
+        }
+        return prepayId
+    }
 }
