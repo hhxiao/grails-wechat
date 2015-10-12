@@ -3,7 +3,7 @@ package org.grails.plugin.wechat
  * Authors: Hai-Hua Xiao (hhxiao@gmail.com)
  * Date: 15/10/12
  **/
-class WechatPayController {
+class WxpayController {
     def wechatHandlerService
 
     static allowedMethods = [echo: "GET", callback: "POST", result: "POST"]

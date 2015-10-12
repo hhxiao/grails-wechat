@@ -67,7 +67,7 @@ class WechatPayService implements InitializingBean {
         payData.put(PayDataKey.mch_id, merchantId)
         payData.put(PayDataKey.nonce_str, StringUtils.randomString(32, true))
 
-        String callbackUrl = linkGenerator.link(controller: 'wechatPay', action: 'result', absolute: true)
+        String callbackUrl = linkGenerator.link(controller: 'wxpay', action: 'result', absolute: true)
         payData.putIfAbsent(PayDataKey.notify_url, callbackUrl)
         payData.putIfAbsent(PayDataKey.spbill_create_ip, paymentIp)
 
