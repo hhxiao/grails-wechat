@@ -42,7 +42,7 @@ class ImageUtils {
                 // create a blank, RGB, same width and height, and a white background
                 BufferedImage newBufferedImage = resize(bufferedImage, newWidth, newHeight, true)
                 // write to jpeg file
-                File jpgFile = new File("C:/Temp", (isJpg ? imageFile.name : imageFile.name + ".jpg"))
+                File jpgFile = new File(System.getProperty("java.io.tmpdir"), (isJpg ? imageFile.name : imageFile.name + ".jpg"))
                 ImageIO.write(newBufferedImage, "jpg", jpgFile);
                 return jpgFile
             }
