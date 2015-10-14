@@ -1,6 +1,5 @@
 package org.grails.plugin.wechat
 
-import grails.converters.JSON
 import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 import org.grails.plugin.wechat.bean.PayData
 import org.grails.plugin.wechat.bean.PayDataKey
