@@ -1,5 +1,6 @@
 package org.grails.plugin.wechat
 
+import grails.converters.JSON
 import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 import org.grails.plugin.wechat.bean.PayData
 import org.grails.plugin.wechat.bean.PayDataKey
@@ -29,40 +30,57 @@ class WechatPayService implements InitializingBean {
     LinkGenerator linkGenerator
 
     String getQrCodeText(String productId) {
-        def data = [appid: wechatTokenService.appId, mch_id: merchantId,
-                    product_id: productId, nonce_str: StringUtils.randomString(32, true),
-                    time_stamp: System.currentTimeMillis()]
-        def sign = SignatureHelper.sign(data)
-        "weixin://wxpay/bizpayurl?sign=${sign}&appid=${data.appid}&mch_id=${data.mch_id}&product_id=${data.product_id}&time_stamp=${data.time_stamp}&nonce_str=${data.time_stamp}"
+        def data = [appid: wechatTokenService.appId,
+                    mch_id: merchantId,
+                    product_id: productId,
+                    time_stamp: (int)(System.currentTimeMillis() / 1000),
+                    nonce_str: StringUtils.randomString(32, false)]
+        def sign = SignatureHelper.sign(data, [key: paymentKey])
+        "weixin://wxpay/bizpayurl?appid=${data.appid}&mch_id=${data.mch_id}&product_id=${data.product_id}&time_stamp=${data.time_stamp}&nonce_str=${data.nonce_str}&sign=${sign}"
     }
 
-    PayData unifiedOrderForProduct(String out_trade_no, String product_id, int total_fee, String title, String attach = '') {
+    def unifiedOrderForJsApi(String openid, String out_trade_no, String product_id, int total_fee, String title) {
+        def pd = unifiedOrder(openid, out_trade_no, product_id, total_fee, title, [trade_type: TradeType.JSAPI])
+        int time_stamp = (int)(System.currentTimeMillis() / 1000)
+        def data = [appId: pd.getString(PayDataKey.appid),
+                    timeStamp: time_stamp.toString(),
+                    nonceStr: StringUtils.randomString(32, false),
+                    "package": "prepay_id=${pd.getString(PayDataKey.prepay_id)}",
+                    signType: "MD5"
+        ]
+        data['paySign'] = SignatureHelper.sign(data, [key: paymentKey]).toUpperCase()
+        return data;
+    }
+
+    PayData unifiedOrder(String out_trade_no, String product_id, int total_fee, String title, Map additional = [:]) {
         PayData payData = new PayData()
 
         payData.put(PayDataKey.product_id, product_id)
         payData.put(PayDataKey.body, title)
-        payData.put(PayDataKey.attach, attach)
+        payData.put(PayDataKey.attach, "")
         payData.put(PayDataKey.out_trade_no, out_trade_no)
         payData.put(PayDataKey.total_fee, total_fee)
         payData.put(PayDataKey.trade_type, TradeType.NATIVE)
 
-        unifiedOrder(payData)
+        unifiedOrder(payData, additional)
     }
 
-    PayData unifiedOrderForOpenId(String out_trade_no, String openid, int total_fee, String title, String attach = '') {
+    PayData unifiedOrder(String openid, String out_trade_no, String product_id, int total_fee, String title, Map additional = [:]) {
         PayData payData = new PayData()
 
         payData.put(PayDataKey.openid, openid)
+        payData.put(PayDataKey.product_id, product_id)
         payData.put(PayDataKey.body, title)
-        payData.put(PayDataKey.attach, attach)
+        payData.put(PayDataKey.attach, "")
         payData.put(PayDataKey.out_trade_no, out_trade_no)
         payData.put(PayDataKey.total_fee, total_fee)
-        payData.put(PayDataKey.trade_type, TradeType.JSAPI)
+        payData.put(PayDataKey.trade_type, TradeType.NATIVE)
 
-        unifiedOrder(payData)
+        unifiedOrder(payData, additional)
     }
 
-    PayData unifiedOrder(PayData payData) {
+    PayData unifiedOrder(PayData payData, Map additional = [:]) {
+        if(additional) payData.putAll(additional)
         payData.put(PayDataKey.appid, wechatTokenService.appId)
         payData.put(PayDataKey.mch_id, merchantId)
         payData.put(PayDataKey.nonce_str, StringUtils.randomString(32, true))

@@ -1,9 +1,12 @@
 package org.grails.plugin.wechat.internal
 
+import org.grails.plugin.wechat.bean.PayData
+import org.grails.plugin.wechat.bean.PayDataKey
 import org.grails.plugin.wechat.message.Message
 import org.grails.plugin.wechat.message.ResponseMessage
 import org.grails.plugin.wechat.util.HandlersRegistry
 import org.grails.plugin.wechat.util.MessageUtils
+import org.grails.plugin.wechat.util.StringUtils
 
 /**
  * Internal service, supposed only called by WechatController
@@ -12,12 +15,14 @@ import org.grails.plugin.wechat.util.MessageUtils
  */
 class WechatHandlerService {
     def wechatHandlersRegistry
+    def wechatPayService
+    def wechatTokenService
 
     String handleMessage(Message message) {
         String fromUserName = message.fromUserName
         String toUserName = message.toUserName
 
-        Collection<HandlersRegistry.Handler> messageHandlers = wechatHandlersRegistry.getMessageHandlers(message)
+        Collection<HandlersRegistry.MHandler> messageHandlers = wechatHandlersRegistry.getMessageHandlers(message)
 
         ResponseMessage result = null
         messageHandlers.each {
@@ -32,13 +37,22 @@ class WechatHandlerService {
         return ''
     }
 
-    String handlePayment(String openId, String productId) {
-        Collection<HandlersRegistry.PaymentHandler> paymentHandlers = wechatHandlersRegistry.getPaymentHandlers(openId, productId)
-        String prepayId = ""
+    PayData handlePayment(PayData payData) {
+        Collection<HandlersRegistry.PHandler> paymentHandlers = wechatHandlersRegistry.getPaymentHandlers(payData)
+        PayData newPayData = new PayData()
+        newPayData.copy(payData, PayDataKey.openid, PayDataKey.product_id)
+        newPayData.put(PayDataKey.appid, wechatTokenService.appId)
+        newPayData.put(PayDataKey.mch_id, wechatPayService.merchantId)
+        newPayData.put(PayDataKey.nonce_str, StringUtils.randomString(32, false))
         paymentHandlers.each {
-            String res = it.process(openId, productId)
-            if(res != null) prepayId = res
+            newPayData = it.process(newPayData)
         }
-        return prepayId
+        newPayData.put(PayDataKey.return_code, "SUCCESS")
+        if(newPayData.getString(PayDataKey.prepay_id)) {
+            newPayData.put(PayDataKey.result_code, "SUCCESS")
+        } else {
+            newPayData.put(PayDataKey.result_code, "FAIL")
+        }
+        newPayData.sign(wechatPayService.paymentKey)
     }
 }

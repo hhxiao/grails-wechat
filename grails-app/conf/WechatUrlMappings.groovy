@@ -4,10 +4,13 @@ class WechatUrlMappings {
         "/wechat"(controller: "wechat", parseRequest: true) {
             action = [GET: "echo", POST: "post"]
         }
-        "/wechat_pay"(controller: "wxpay", parseRequest: true) {
+        "/wepay/order"(controller: "wxpay", parseRequest: true) {
+            action = [GET: "order"]
+        }
+        "/wepay/callback"(controller: "wxpay", parseRequest: true) {
             action = [GET: "echo", POST: "callback"]
         }
-        "/wechat_pay_result"(controller: "wxpay", parseRequest: true) {
+        "/wepay/result"(controller: "wxpay", parseRequest: true) {
             action = [GET: "echo", POST: "result"]
         }
     }

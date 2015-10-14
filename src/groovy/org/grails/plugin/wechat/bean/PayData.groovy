@@ -35,6 +35,7 @@ enum PayDataKey {
     time_end,
     time_expire,
     time_start,
+    time_stamp,
     sign,
     transaction_id,
     refund_id,
@@ -77,6 +78,24 @@ class PayData extends HashMap<String, Object> {
         }
     }
 
+    void copy(PayData originData, PayDataKey... keys) {
+        keys.each { key ->
+            put(key, originData.get(key))
+        }
+    }
+
+    Object get(PayDataKey key) {
+        super.get(key.name())
+    }
+
+    String getString(PayDataKey key) {
+        (String)get(key)
+    }
+
+    Integer getInteger(PayDataKey key) {
+        (Integer)get(key)
+    }
+
     static PayData fromXml(String text) {
         PayData ret = new PayData()
         new XmlSlurper().parseText(text).children().each {
@@ -86,8 +105,9 @@ class PayData extends HashMap<String, Object> {
         ret
     }
 
-    void sign(String paymentKey) {
+    PayData sign(String paymentKey) {
         sign = SignatureHelper.sign(this, [key: paymentKey]).toUpperCase()
+        this
     }
 
     void validate() {
@@ -97,11 +117,11 @@ class PayData extends HashMap<String, Object> {
         checkData(PayDataKey.trade_type)
         checkData(PayDataKey.notify_url)
 
-        switch (get(PayDataKey.trade_type.name())) {
-            case TradeType.NATIVE.name():
+        switch (get(PayDataKey.trade_type)) {
+            case TradeType.NATIVE:
                 checkData(PayDataKey.product_id)
                 break
-            case TradeType.JSAPI.name():
+            case TradeType.JSAPI:
                 checkData(PayDataKey.openid)
                 break
         }

@@ -1,6 +1,6 @@
 package org.grails.plugin.wechat.util
 
-import java.security.MessageDigest
+import groovy.xml.XmlUtil
 
 /**
  * Authors: haihxiao
@@ -17,6 +17,10 @@ class StringUtils {
             randBuffer[i] = numbersAndLetters[randGen.nextInt(numbersAndLetters.length)]
         }
         return capitalize ? new String(randBuffer).toUpperCase() : new String(randBuffer).toLowerCase()
+    }
+
+    static String toXmlString(def xml) {
+        return XmlUtil.serialize(xml).replaceAll("[\n]", "").replaceAll(">\\s+?<", "><").trim()
     }
 
     private static final Random randGen = new Random();
