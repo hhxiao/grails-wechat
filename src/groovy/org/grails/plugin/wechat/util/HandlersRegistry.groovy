@@ -112,7 +112,7 @@ class HandlersRegistry {
     }
 
     void unregisterHandlers(Collection<Class> serviceClasses) {
-        serviceClasses.findAll{!it.getPackage().getName().startsWith("org.grails.plugin.wechat")}.each {
+        serviceClasses.findAll{!it.getPackage() || !it.getPackage().getName().startsWith("org.grails.plugin.wechat")}.each {
             messageHandlers.remove(it)
             paymentHandlers.remove(it)
         }
